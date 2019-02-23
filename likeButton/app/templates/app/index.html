@@ -1,0 +1,56 @@
+<html>
+  <head>
+    <style>
+      p{ width: 100px;height: 50px;line-height: 50px;font-size: 30px;color: #F75D5D;text-align: center;background: #fff;border: solid 1px #F75D5D;border-radius: 10px;padding: 10px;}
+      .on { background: #F75D5D; color: #fff; }
+    </style>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  </head>
+  <body>
+    <p class='like-btn' data-href="{{ app.get_api_like_url }}"><span class="liked-cnt">{{ app.like.count }}</span><i class="fas fa-kiss-wink-heart"></i></p>
+    <script>
+    $(function(){
+      const this_ = $(".like-btn");
+      const likeUrl = this_.attr("data-href")
+      $.ajax({
+       url: likeUrl,
+       method: "GET",
+       data: {"status":0},
+       success: function(data){
+         if (data.liked){
+             this_.addClass("on");
+         }
+       }, error: function(error){
+         console.log("error")
+       }
+     })
+   });
+   $(".like-btn").click(function(e){
+      e.preventDefault()
+      const this_ = $(this);
+      const like_cnt = $(".liked-cnt");
+      const likeUrl = this_.attr("data-href");
+      if (likeUrl){
+         $.ajax({
+          url: likeUrl,
+          method: "GET",
+          data: {"status":1},
+          success: function(data){
+            let change_like = like_cnt.text();
+            if (data.liked){
+              like_cnt.text(++change_like);
+              this_.addClass("on");
+            } else {
+              like_cnt.text(--change_like);
+              this_.removeClass("on");
+            }
+          }, error: function(error){
+            console.log("error")
+          }
+        })
+      }
+    })
+    </script>
+  </body>
+</html>
